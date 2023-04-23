@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { gameState, type Velocity } from '$lib/stores/gameState';
 	const handleKeyDown = (e: KeyboardEvent) => {
-		console.log(e.key);
 		const key = e.key;
 		if (key.startsWith('Arrow')) {
 			e.preventDefault();
