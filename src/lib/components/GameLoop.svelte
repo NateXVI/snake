@@ -1,6 +1,25 @@
 <script lang="ts">
-	import { setGameState, gameState } from '$lib/stores/gameState';
+	import { setGameState, gameState, type Coordinate } from '$lib/stores/gameState';
 	import { onDestroy, onMount } from 'svelte';
+
+	// create an array that stores all the positions of the board
+	const possiblePositions: Coordinate[] = [];
+	for (let x = 0; x < $gameState.boardWidth; x++) {
+		for (let y = 0; y < $gameState.boardHeight; y++) {
+			possiblePositions.push({ x, y });
+		}
+	}
+
+	// create a function that returns all the positions that the snake is currently occupying
+	const openPositions = () => {
+		const { snake } = $gameState;
+		const occupiedPositions = [snake.head, ...snake.body];
+		return possiblePositions.filter(
+			(pos) =>
+				!occupiedPositions.some((occupiedPos) => occupiedPos.x === pos.x && occupiedPos.y === pos.y)
+		);
+	};
+
 	const interval = setInterval(() => {
 		const { velocity, snake } = $gameState;
 
@@ -20,12 +39,13 @@
 
 		if (newSnakePos.x === $gameState.food.x && newSnakePos.y === $gameState.food.y) {
 			snake.body.push(snake.head);
+
+			const openPos = openPositions();
+			const randomPos = openPos[Math.floor(Math.random() * openPos.length)];
+
 			setGameState({
 				...$gameState,
-				food: {
-					x: Math.floor(Math.random() * $gameState.boardWidth),
-					y: Math.floor(Math.random() * $gameState.boardHeight)
-				}
+				food: randomPos
 			});
 		}
 
