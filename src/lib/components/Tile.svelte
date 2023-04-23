@@ -8,15 +8,13 @@
 	const getColor = (x: number, y: number) => {
 		const { snake, food } = $gameState;
 
-		const snakeStyles = 'bg-transparent';
-
 		if (snake.head.x === x && snake.head.y === y) {
-			return snakeStyles;
+			return 'bg-white';
 		}
 
 		for (const pos of snake.body) {
 			if (pos.x === x && pos.y === y) {
-				return snakeStyles;
+				return 'bg-transparent';
 			}
 		}
 
